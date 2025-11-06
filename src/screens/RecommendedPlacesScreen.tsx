@@ -10,26 +10,23 @@ import {
   Dimensions,
   Share,
 } from 'react-native';
-import { Card } from '../landStationComponents/Card';
-import { colors } from '../landStationConstants/colors';
-import { places } from '../landStationConstants/data';
-import { Place } from '../landStationTypes';
-import { storage } from '../landStationUtils/storage';
-import { BACKGROUND_IMAGE } from '../landStationConstants/images';
+import { Card } from '../components/Card';
+import { colors } from '../constants/colors';
+import { places } from '../constants/data';
+import { Place } from '../types';
+import { storage } from '../utils/storage';
+import { BACKGROUND_IMAGE } from '../constants/images';
 
 const { width } = Dimensions.get('window');
 
 interface RecommendedPlacesScreenProps {
   navigation: any;
-  route?: any;
 }
 
 export const RecommendedPlacesScreen: React.FC<RecommendedPlacesScreenProps> = ({
   navigation,
-  route,
 }) => {
-  const initialIndex = route?.params?.initialIndex || 0;
-  const [currentIndex, setCurrentIndex] = useState(initialIndex);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const currentPlace = places[currentIndex];
 
   const handlePrevious = () => {

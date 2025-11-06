@@ -117,3 +117,76 @@ dependencies {
         implementation jscFlavor
     }
 }
+
+// apply plugin: "com.android.application"
+// apply plugin: "org.jetbrains.kotlin.android"
+// apply plugin: "com.facebook.react"
+
+// // Конфигурация React Native
+// react {
+//     autolinkLibrariesWithApp()
+// }
+
+// def enableProguardInReleaseBuilds = true
+// def jscFlavor = 'io.github.react-native-community:jsc-android:2026004.+'
+
+// android {
+//     ndkVersion rootProject.ext.ndkVersion
+//     buildToolsVersion rootProject.ext.buildToolsVersion
+//     compileSdk rootProject.ext.compileSdkVersion
+
+//     namespace "com.landstation"
+
+//     defaultConfig {
+//         applicationId "com.landstation"
+//         minSdkVersion rootProject.ext.minSdkVersion
+//         targetSdkVersion rootProject.ext.targetSdkVersion
+//         versionCode 1
+//         versionName "1.0"
+//     }
+
+//     signingConfigs {
+//         debug {
+//             storeFile file('debug.keystore')
+//             storePassword 'android'
+//             keyAlias 'androiddebugkey'
+//             keyPassword 'android'
+//         }
+
+//         // 👇 Конфигурация релизного ключа
+//         release {
+//             if (project.hasProperty('MYAPP_UPLOAD_STORE_FILE')) {
+//                 storeFile file(MYAPP_UPLOAD_STORE_FILE)
+//                 storePassword MYAPP_UPLOAD_STORE_PASSWORD
+//                 keyAlias MYAPP_UPLOAD_KEY_ALIAS
+//                 keyPassword MYAPP_UPLOAD_KEY_PASSWORD
+//             }
+//         }
+//     }
+
+//     buildTypes {
+//         debug {
+//             signingConfig signingConfigs.debug
+//         }
+
+//         release {
+//             // используем наш release-ключ
+//             signingConfig signingConfigs.release
+
+//             // включаем оптимизацию
+//             minifyEnabled enableProguardInReleaseBuilds
+//             shrinkResources true
+//             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+//         }
+//     }
+// }
+
+// dependencies {
+//     implementation("com.facebook.react:react-android")
+
+//     if (hermesEnabled.toBoolean()) {
+//         implementation("com.facebook.react:hermes-android")
+//     } else {
+//         implementation jscFlavor
+//     }
+// }
