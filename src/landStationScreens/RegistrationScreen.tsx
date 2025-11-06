@@ -42,16 +42,17 @@ export const RegistrationScreen: React.FC<RegistrationScreenProps> = ({
   };
 
   const handleContinue = async () => {
-    if (name.trim() && about.trim()) {
-      await storage.saveUser({
-        id: Date.now().toString(),
-        name: name.trim(),
-        about: about.trim(),
-        photo: photo,
-        registrationDate: new Date().toISOString().split('T')[0],
-      });
-      navigation.replace('Home');
-    }
+    // Разрешаем регистрацию с пустыми полями
+    await storage.saveUser({
+      id: Date.now().toString(),
+      name: name.trim() || 'User',
+      about: about.trim() || '',
+      photo: photo,
+      registrationDate: new Date().toISOString().split('T')[0],
+    });
+    // После регистрации переходим на главный экран
+    // Пользователь может выйти через настройки и войти снова
+    navigation.replace('Home');
   };
 
   return (
@@ -82,14 +83,14 @@ export const RegistrationScreen: React.FC<RegistrationScreenProps> = ({
           </TouchableOpacity>
 
           <Input
-            placeholder="Your name"
+            placeholder="Your name (optional)"
             value={name}
             onChangeText={setName}
             style={styles.input}
           />
 
           <Input
-            placeholder="About me"
+            placeholder="About me (optional)"
             value={about}
             onChangeText={setAbout}
             style={[styles.input, styles.textArea]}
@@ -97,13 +98,11 @@ export const RegistrationScreen: React.FC<RegistrationScreenProps> = ({
             numberOfLines={4}
           />
 
-          {name.trim() && about.trim() && (
-            <Button
-              title="Continue"
-              onPress={handleContinue}
-              style={styles.button}
-            />
-          )}
+          <Button
+            title="Continue"
+            onPress={handleContinue}
+            style={styles.button}
+          />
         </Card>
       </ScrollView>
     </ImageBackground>
@@ -118,6 +117,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'center',
     padding: 20,
+    paddingBottom: 40,
   },
   container: {
     marginVertical: 40,

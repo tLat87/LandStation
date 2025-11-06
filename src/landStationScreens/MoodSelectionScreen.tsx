@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ImageBackground,
   Image,
+  ScrollView,
 } from 'react-native';
 import { Card } from '../landStationComponents/Card';
 import { Button } from '../landStationComponents/Button';
@@ -44,8 +45,12 @@ export const MoodSelectionScreen: React.FC<MoodSelectionScreenProps> = ({
       source={BACKGROUND_IMAGE}
       style={styles.background}
       blurRadius={10}>
-      <View style={styles.container}>
-        <Card style={styles.card}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}>
+        <View style={styles.container}>
+          <Card style={styles.card}>
           <Text style={styles.title}>
             Choosing your mood for the day
             </Text>
@@ -88,8 +93,9 @@ export const MoodSelectionScreen: React.FC<MoodSelectionScreenProps> = ({
               style={styles.button}
             />
           )}
-        </Card>
-      </View>
+          </Card>
+        </View>
+      </ScrollView>
     </ImageBackground>
   );
 };
@@ -98,10 +104,18 @@ const styles = StyleSheet.create({
   background: {
     flex: 1,
   },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    padding: 20,
+    paddingBottom: 40,
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
-    padding: 20,
   },
   card: {
     padding: 32,

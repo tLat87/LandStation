@@ -34,12 +34,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     loadUser();
   }, []);
 
-  const userName = user?.name || 'Nick';
-  const userAbout = user?.about || 'Lorem ipsum dolor hanmor';
-
-  const userPhoto =
-    user?.photo ||
-    'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200';
+  const userName = user?.name || 'User';
+  const userAbout = user?.about || '';
+  const userPhoto = user?.photo;
 
   return (
     <ImageBackground
@@ -54,10 +51,18 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
         <Card style={styles.profileCard}>
           <View style={styles.profileContent}>
-            <Image source={{ uri: userPhoto }} style={styles.profilePhoto} />
+            {userPhoto ? (
+              <Image source={{ uri: userPhoto }} style={styles.profilePhoto} />
+            ) : (
+              <View style={styles.profilePhotoPlaceholder}>
+                <Text style={styles.profilePhotoEmoji}>👤</Text>
+              </View>
+            )}
             <View style={styles.profileInfo}>
               <Text style={styles.profileName}>{userName}</Text>
-              <Text style={styles.profileAbout}>{userAbout}</Text>
+              {userAbout ? (
+                <Text style={styles.profileAbout}>{userAbout}</Text>
+              ) : null}
             </View>
             <TouchableOpacity
               style={styles.settingsButton}
@@ -130,6 +135,7 @@ const styles = StyleSheet.create({
   content: {
     padding: 20,
     paddingTop: 60,
+    paddingBottom: 40,
   },
   sectionTitle: {
     fontSize: 16,
@@ -149,6 +155,20 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 30,
     marginRight: 16,
+  },
+  profilePhotoPlaceholder: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    marginRight: 16,
+    backgroundColor: colors.dark.card,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: colors.dark.border,
+  },
+  profilePhotoEmoji: {
+    fontSize: 32,
   },
   profileInfo: {
     flex: 1,

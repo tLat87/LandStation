@@ -19,6 +19,18 @@ export const storage = {
     return data ? JSON.parse(data) : null;
   },
 
+  async deleteUser(): Promise<void> {
+    await AsyncStorage.removeItem(KEYS.USER);
+  },
+
+  async deleteAllUserData(): Promise<void> {
+    // Удаляем все данные пользователя
+    await AsyncStorage.removeItem(KEYS.USER);
+    await AsyncStorage.removeItem(KEYS.MOOD_ENTRIES);
+    await AsyncStorage.removeItem(KEYS.SAVED_PLACES);
+    await AsyncStorage.removeItem(KEYS.ONBOARDING_COMPLETED);
+  },
+
   // Mood entries
   async saveMoodEntry(entry: MoodEntry): Promise<void> {
     const entries = await this.getMoodEntries();

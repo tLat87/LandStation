@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ScrollView,
   ImageBackground,
+  Alert,
 } from 'react-native';
 import { Card } from '../landStationComponents/Card';
 import { colors } from '../landStationConstants/colors';
@@ -39,11 +40,9 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
     return unsubscribe;
   }, [navigation]);
 
-  const userName = user?.name || 'Nick';
-  const userAbout = user?.about || 'Lorem ipsum dolor hanmor';
-  const userPhoto =
-    user?.photo ||
-    'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200';
+  const userName = user?.name || 'User';
+  const userAbout = user?.about || '';
+  const userPhoto = user?.photo;
 
   const calculateDaysActive = (regDate: string | undefined) => {
     if (!regDate) {
@@ -63,6 +62,73 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
   const registrationDate = user?.registrationDate
     ? new Date(user.registrationDate).toLocaleDateString('en-GB')
     : new Date().toLocaleDateString('en-GB');
+
+  const handleLogout = async () => {
+    Alert.alert(
+      'Logout',
+      'Are you sure you want to logout? You will need to register again to access your account.',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Logout',
+          style: 'destructive',
+          onPress: async () => {
+            // Удаляем только данные пользователя, но сохраняем настроения и места
+            // чтобы пользователь мог зарегистрироваться снова и увидеть свою историю
+            await storage.deleteUser();
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'Registration' }],
+            });
+          },
+        },
+      ],
+    );
+  };
+
+  const handleDeleteAccount = async () => {
+    Alert.alert(
+      'Delete Account',
+      'Are you sure you want to delete your account? This action cannot be undone and all your data will be permanently deleted.',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            // Второе подтверждение
+            Alert.alert(
+              'Confirm Deletion',
+              'This will permanently delete all your data including your profile, mood entries, and saved places. Are you absolutely sure?',
+              [
+                {
+                  text: 'Cancel',
+                  style: 'cancel',
+                },
+                {
+                  text: 'Delete Forever',
+                  style: 'destructive',
+                  onPress: async () => {
+                    await storage.deleteAllUserData();
+                    navigation.reset({
+                      index: 0,
+                      routes: [{ name: 'Onboarding' }],
+                    });
+                  },
+                },
+              ],
+            );
+          },
+        },
+      ],
+    );
+  };
 
   return (
     <ImageBackground
@@ -87,14 +153,22 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         <Card style={styles.profileCard}>
           <Text style={styles.cardTitle}>My profile</Text>
           <View style={styles.profileContent}>
-            <Image source={{ uri: userPhoto }} style={styles.profilePhoto} />
+            {userPhoto ? (
+              <Image source={{ uri: userPhoto }} style={styles.profilePhoto} />
+            ) : (
+              <View style={styles.profilePhotoPlaceholder}>
+                <Text style={styles.profilePhotoEmoji}>👤</Text>
+              </View>
+            )}
             <View style={styles.profileInfo}>
               <View style={styles.nameContainer}>
                 <Text style={styles.profileName}>{userName}</Text>
               </View>
-              <View style={styles.aboutContainer}>
-                <Text style={styles.profileAbout}>{userAbout}</Text>
-              </View>
+              {userAbout ? (
+                <View style={styles.aboutContainer}>
+                  <Text style={styles.profileAbout}>{userAbout}</Text>
+                </View>
+              ) : null}
             </View>
           </View>
         </Card>
@@ -114,6 +188,22 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
             </View>
           </View>
         </Card>
+
+        <Card style={styles.actionsCard}>
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={handleLogout}>
+            <Text style={styles.actionButtonText}>Logout</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.actionButton, styles.deleteButton]}
+            onPress={handleDeleteAccount}>
+            <Text style={[styles.actionButtonText, styles.deleteButtonText]}>
+              Delete Account
+            </Text>
+          </TouchableOpacity>
+        </Card>
       </ScrollView>
     </ImageBackground>
   );
@@ -129,6 +219,7 @@ const styles = StyleSheet.create({
   content: {
     padding: 20,
     paddingTop: 60,
+    paddingBottom: 40,
   },
   sectionTitle: {
     fontSize: 16,
@@ -184,6 +275,20 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     marginRight: 16,
   },
+  profilePhotoPlaceholder: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    marginRight: 16,
+    backgroundColor: colors.dark.card,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: colors.dark.border,
+  },
+  profilePhotoEmoji: {
+    fontSize: 40,
+  },
   profileInfo: {
     flex: 1,
     gap: 12,
@@ -234,5 +339,29 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: colors.dark.text,
+  },
+  actionsCard: {
+    marginBottom: 20,
+  },
+  actionButton: {
+    backgroundColor: colors.dark.button,
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderRadius: 12,
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  deleteButton: {
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    borderColor: '#FF4444',
+  },
+  actionButtonText: {
+    color: colors.dark.text,
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  deleteButtonText: {
+    color: '#FF4444',
   },
 });
