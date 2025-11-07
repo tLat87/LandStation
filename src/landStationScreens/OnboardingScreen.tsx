@@ -7,6 +7,7 @@ import {
   ImageBackground,
   Dimensions,
   Image,
+  ScrollView,
 } from 'react-native';
 import { Button } from '../landStationComponents/Button';
 import { colors } from '../landStationConstants/colors';
@@ -82,42 +83,47 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({
           <Text style={styles.skipText}>Skip</Text>
         </TouchableOpacity>
 
-        <View style={styles.content}>
-          <View style={styles.imageContainer}>
-            <Image source={currentScreen.image} style={styles.onboardingImage} resizeMode="contain" />
-          </View>
-
-          <View style={styles.textContainer}>
-            <View style={styles.titleContainer}>
-              <Text style={styles.title}>{currentScreen.title}</Text>
-              <View style={styles.highlightContainer}>
-                <Text style={styles.titleHighlight}>
-                  {currentScreen.titleHighlight}
-                </Text>
-              </View>
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}>
+          <View style={styles.content}>
+            <View style={styles.imageContainer}>
+              <Image source={currentScreen.image} style={styles.onboardingImage} resizeMode="contain" />
             </View>
 
-            <Text style={styles.body}>{currentScreen.body}</Text>
-          </View>
+            <View style={styles.textContainer}>
+              <View style={styles.titleContainer}>
+                <Text style={styles.title}>{currentScreen.title}</Text>
+                <View style={styles.highlightContainer}>
+                  <Text style={styles.titleHighlight}>
+                    {currentScreen.titleHighlight}
+                  </Text>
+                </View>
+              </View>
 
-          <View style={styles.indicators}>
-            {screens.map((_, index) => (
-              <View
-                key={index}
-                style={[
-                  styles.indicator,
-                  index === currentIndex && styles.indicatorActive,
-                ]}
-              />
-            ))}
-          </View>
+              <Text style={styles.body}>{currentScreen.body}</Text>
+            </View>
 
-          <Button
-            title={currentScreen.buttonText}
-            onPress={handleNext}
-            style={styles.button}
-          />
-        </View>
+            <View style={styles.indicators}>
+              {screens.map((_, index) => (
+                <View
+                  key={index}
+                  style={[
+                    styles.indicator,
+                    index === currentIndex && styles.indicatorActive,
+                  ]}
+                />
+              ))}
+            </View>
+
+            <Button
+              title={currentScreen.buttonText}
+              onPress={handleNext}
+              style={styles.button}
+            />
+          </View>
+        </ScrollView>
       </View>
     </ImageBackground>
   );
@@ -135,16 +141,23 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     paddingHorizontal: 20,
     paddingVertical: 10,
+    zIndex: 1,
   },
   skipText: {
     color: colors.dark.textSecondary,
     fontSize: 16,
   },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingBottom: 40,
+  },
   content: {
     flex: 1,
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    paddingBottom: 40,
+    minHeight: '100%',
   },
   imageContainer: {
     flex: 1,
