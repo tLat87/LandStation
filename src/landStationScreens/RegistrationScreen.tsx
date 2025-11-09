@@ -50,9 +50,8 @@ export const RegistrationScreen: React.FC<RegistrationScreenProps> = ({
       photo: photo,
       registrationDate: new Date().toISOString().split('T')[0],
     });
-    // После регистрации переходим на главный экран
-    // Пользователь может выйти через настройки и войти снова
-    navigation.replace('Home');
+    // После регистрации возвращаемся назад (обычно это Settings)
+    navigation.goBack();
   };
 
   return (

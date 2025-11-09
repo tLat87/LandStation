@@ -3,11 +3,9 @@ import {
   View,
   Text,
   StyleSheet,
-  Image,
   TouchableOpacity,
   ScrollView,
   ImageBackground,
-  Alert,
 } from 'react-native';
 import { Card } from '../landStationComponents/Card';
 import { colors } from '../landStationConstants/colors';
@@ -40,10 +38,6 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
     return unsubscribe;
   }, [navigation]);
 
-  const userName = user?.name || 'User';
-  const userAbout = user?.about || '';
-  const userPhoto = user?.photo;
-
   const calculateDaysActive = (regDate: string | undefined) => {
     if (!regDate) {
       return 0;
@@ -61,74 +55,8 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
 
   const registrationDate = user?.registrationDate
     ? new Date(user.registrationDate).toLocaleDateString('en-GB')
-    : new Date().toLocaleDateString('en-GB');
+    : 'Not registered';
 
-  const handleLogout = async () => {
-    Alert.alert(
-      'Logout',
-      'Are you sure you want to logout? You will need to register again to access your account.',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Logout',
-          style: 'destructive',
-          onPress: async () => {
-            // Удаляем только данные пользователя, но сохраняем настроения и места
-            // чтобы пользователь мог зарегистрироваться снова и увидеть свою историю
-            await storage.deleteUser();
-            navigation.reset({
-              index: 0,
-              routes: [{ name: 'Registration' }],
-            });
-          },
-        },
-      ],
-    );
-  };
-
-  const handleDeleteAccount = async () => {
-    Alert.alert(
-      'Delete Account',
-      'Are you sure you want to delete your account? This action cannot be undone and all your data will be permanently deleted.',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: async () => {
-            // Второе подтверждение
-            Alert.alert(
-              'Confirm Deletion',
-              'This will permanently delete all your data including your profile, mood entries, and saved places. Are you absolutely sure?',
-              [
-                {
-                  text: 'Cancel',
-                  style: 'cancel',
-                },
-                {
-                  text: 'Delete Forever',
-                  style: 'destructive',
-                  onPress: async () => {
-                    await storage.deleteAllUserData();
-                    navigation.reset({
-                      index: 0,
-                      routes: [{ name: 'Onboarding' }],
-                    });
-                  },
-                },
-              ],
-            );
-          },
-        },
-      ],
-    );
-  };
 
   return (
     <ImageBackground
@@ -150,31 +78,8 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
           <Text style={styles.headerTitle}>Settings</Text>
         </View>
 
-        <Card style={styles.profileCard}>
-          <Text style={styles.cardTitle}>My profile</Text>
-          <View style={styles.profileContent}>
-            {userPhoto ? (
-              <Image source={{ uri: userPhoto }} style={styles.profilePhoto} />
-            ) : (
-              <View style={styles.profilePhotoPlaceholder}>
-                <Text style={styles.profilePhotoEmoji}>👤</Text>
-              </View>
-            )}
-            <View style={styles.profileInfo}>
-              <View style={styles.nameContainer}>
-                <Text style={styles.profileName}>{userName}</Text>
-              </View>
-              {userAbout ? (
-                <View style={styles.aboutContainer}>
-                  <Text style={styles.profileAbout}>{userAbout}</Text>
-                </View>
-              ) : null}
-            </View>
-          </View>
-        </Card>
-
         <Card style={styles.statsCard}>
-          <Text style={styles.cardTitle}>Activity statistics</Text>
+          <Text style={styles.cardTitle}>Activity Statistics</Text>
           <View style={styles.statsRow}>
             <View style={styles.statItem}>
               <Text style={styles.statLabel}>
@@ -189,21 +94,15 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
           </View>
         </Card>
 
-        <Card style={styles.actionsCard}>
-          <TouchableOpacity
-            style={styles.actionButton}
-            onPress={handleLogout}>
-            <Text style={styles.actionButtonText}>Logout</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.actionButton, styles.deleteButton]}
-            onPress={handleDeleteAccount}>
-            <Text style={[styles.actionButtonText, styles.deleteButtonText]}>
-              Delete Account
-            </Text>
-          </TouchableOpacity>
-        </Card>
+        {!user && (
+          <Card style={styles.actionsCard}>
+            <TouchableOpacity
+              style={styles.actionButton}
+              onPress={() => navigation.navigate('Registration')}>
+              <Text style={styles.actionButtonText}>Create Account</Text>
+            </TouchableOpacity>
+          </Card>
+        )}
       </ScrollView>
     </ImageBackground>
   );
@@ -256,7 +155,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: colors.dark.text,
   },
-  profileCard: {
+  statsCard: {
     marginBottom: 20,
   },
   cardTitle: {
@@ -264,62 +163,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: colors.dark.text,
     marginBottom: 16,
-  },
-  profileContent: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-  },
-  profilePhoto: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    marginRight: 16,
-  },
-  profilePhotoPlaceholder: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    marginRight: 16,
-    backgroundColor: colors.dark.card,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: colors.dark.border,
-  },
-  profilePhotoEmoji: {
-    fontSize: 40,
-  },
-  profileInfo: {
-    flex: 1,
-    gap: 12,
-  },
-  nameContainer: {
-    backgroundColor: colors.dark.background,
-    borderRadius: 12,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderWidth: 1,
-    borderColor: colors.dark.border,
-  },
-  profileName: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: colors.dark.text,
-  },
-  aboutContainer: {
-    backgroundColor: colors.dark.background,
-    borderRadius: 12,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderWidth: 1,
-    borderColor: colors.dark.border,
-  },
-  profileAbout: {
-    fontSize: 14,
-    color: colors.dark.text,
-  },
-  statsCard: {
-    marginBottom: 20,
   },
   statsRow: {
     flexDirection: 'row',
@@ -349,19 +192,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     borderRadius: 12,
     alignItems: 'center',
-    marginBottom: 12,
-  },
-  deleteButton: {
-    backgroundColor: 'transparent',
-    borderWidth: 2,
-    borderColor: '#FF4444',
   },
   actionButtonText: {
     color: colors.dark.text,
     fontSize: 16,
     fontWeight: '600',
-  },
-  deleteButtonText: {
-    color: '#FF4444',
   },
 });

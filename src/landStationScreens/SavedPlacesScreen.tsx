@@ -136,9 +136,7 @@ export const SavedPlacesScreen: React.FC<SavedPlacesScreenProps> = ({
 
   return (
     <ImageBackground
-      source={{
-        uri: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800',
-      }}
+      source={BACKGROUND_IMAGE}
       style={styles.background}
       blurRadius={10}>
       <ScrollView

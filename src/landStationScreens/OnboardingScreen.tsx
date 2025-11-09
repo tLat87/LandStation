@@ -67,13 +67,13 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({
     } else {
       // Последний экран - сохраняем, что онбординг пройден
       await storage.setOnboardingCompleted();
-      navigation.replace('Registration');
+      navigation.replace('Home');
     }
   };
 
   const handleSkip = async () => {
     await storage.setOnboardingCompleted();
-    navigation.replace('Registration');
+    navigation.replace('Home');
   };
 
   return (

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -14,8 +14,6 @@ import { Button } from '../landStationComponents/Button';
 import { GradientButton } from '../landStationComponents/GradientButton';
 import { colors } from '../landStationConstants/colors';
 import { facts } from '../landStationConstants/data';
-import { storage } from '../landStationUtils/storage';
-import { User } from '../landStationTypes';
 import { BACKGROUND_IMAGE } from '../landStationConstants/images';
 
 interface HomeScreenProps {
@@ -24,19 +22,6 @@ interface HomeScreenProps {
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const [currentFact] = useState(facts[0]);
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    const loadUser = async () => {
-      const userData = await storage.getUser();
-      setUser(userData);
-    };
-    loadUser();
-  }, []);
-
-  const userName = user?.name || 'User';
-  const userAbout = user?.about || '';
-  const userPhoto = user?.photo;
 
   return (
     <ImageBackground
@@ -47,30 +32,14 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         style={styles.scrollView}
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}>
-        <Text style={styles.sectionTitle}>HOME</Text>
-
-        <Card style={styles.profileCard}>
-          <View style={styles.profileContent}>
-            {userPhoto ? (
-              <Image source={{ uri: userPhoto }} style={styles.profilePhoto} />
-            ) : (
-              <View style={styles.profilePhotoPlaceholder}>
-                <Text style={styles.profilePhotoEmoji}>👤</Text>
-              </View>
-            )}
-            <View style={styles.profileInfo}>
-              <Text style={styles.profileName}>{userName}</Text>
-              {userAbout ? (
-                <Text style={styles.profileAbout}>{userAbout}</Text>
-              ) : null}
-            </View>
-            <TouchableOpacity
-              style={styles.settingsButton}
-              onPress={() => navigation.navigate('Settings')}>
-              <Image source={require('../img/icons/settings.png')} style={styles.settingsIcon} />
-            </TouchableOpacity>
-          </View>
-        </Card>
+        <View style={styles.header}>
+          <Text style={styles.sectionTitle}>HOME</Text>
+          <TouchableOpacity
+            style={styles.settingsButton}
+            onPress={() => navigation.navigate('Settings')}>
+            <Image source={require('../img/icons/settings.png')} style={styles.settingsIcon} />
+          </TouchableOpacity>
+        </View>
 
         <Card style={styles.factCard}>
           <View style={styles.factContent}>
@@ -137,51 +106,16 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     paddingBottom: 40,
   },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
   sectionTitle: {
     fontSize: 16,
     color: colors.dark.textSecondary,
-    marginBottom: 20,
     fontWeight: '600',
-  },
-  profileCard: {
-    marginBottom: 20,
-  },
-  profileContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  profilePhoto: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    marginRight: 16,
-  },
-  profilePhotoPlaceholder: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    marginRight: 16,
-    backgroundColor: colors.dark.card,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: colors.dark.border,
-  },
-  profilePhotoEmoji: {
-    fontSize: 32,
-  },
-  profileInfo: {
-    flex: 1,
-  },
-  profileName: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: colors.dark.text,
-    marginBottom: 4,
-  },
-  profileAbout: {
-    fontSize: 14,
-    color: colors.dark.textSecondary,
   },
   settingsButton: {
     width: 40,
