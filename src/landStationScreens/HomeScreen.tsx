@@ -34,11 +34,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <Text style={styles.sectionTitle}>HOME</Text>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.settingsButton}
             onPress={() => navigation.navigate('Settings')}>
             <Image source={require('../img/icons/settings.png')} style={styles.settingsIcon} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
 
         <Card style={styles.factCard}>

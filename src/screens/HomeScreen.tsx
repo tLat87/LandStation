@@ -52,7 +52,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         showsVerticalScrollIndicator={false}>
         <Text style={styles.sectionTitle}>HOME</Text>
 
-        <Card style={styles.profileCard}>
+        {/* <Card style={styles.profileCard}>
           <View style={styles.profileContent}>
             <Image source={{ uri: userPhoto }} style={styles.profilePhoto} />
             <View style={styles.profileInfo}>
@@ -65,7 +65,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
               <Image source={require('../img/icons/settings.png')} style={styles.settingsIcon} />
             </TouchableOpacity>
           </View>
-        </Card>
+        </Card> */}
 
         <Card style={styles.factCard}>
           <View style={styles.factContent}>

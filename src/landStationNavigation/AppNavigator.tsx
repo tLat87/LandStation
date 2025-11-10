@@ -24,7 +24,7 @@ export const AppNavigator = () => {
           cardStyle: { backgroundColor: 'transparent' },
         }}>
         <Stack.Screen name="Onboarding" component={OnboardingScreen} />
-        <Stack.Screen name="Registration" component={RegistrationScreen} />
+        {/* <Stack.Screen name="Registration" component={RegistrationScreen} /> */}
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="MoodSelection" component={MoodSelectionScreen} />
         <Stack.Screen name="MoodCalendar" component={MoodCalendarScreen} />
